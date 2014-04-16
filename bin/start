@@ -1,0 +1,7 @@
+#!/bin/bash
+CWD=$PWD
+FOREVER=$CWD/node_modules/croquis.deployer/node_modules/.bin/forever
+
+$FOREVER stop $CWD/server.coffee
+export NODE_ENV=production
+$FOREVER start -c $CWD/node_modules/.bin/coffee $CWD/server.coffee

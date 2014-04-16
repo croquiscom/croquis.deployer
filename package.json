@@ -1,0 +1,13 @@
+{
+  "name": "croquis.deployer",
+  "version": "0.1.0",
+  "private": true,
+  "bin": {
+    "croquis_deploy": "./bin/deploy",
+    "croquis_start": "./bin/start",
+    "croquis_stop": "./bin/stop"
+  },
+  "dependencies": {
+    "forever": "~0.11.0"
+  }
+}

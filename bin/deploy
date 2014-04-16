@@ -1,0 +1,18 @@
+#!/bin/bash
+SELF="${BASH_SOURCE[0]}"
+SCRIPT_DIR=`dirname "$SELF"`
+
+source $SCRIPT_DIR/_read_config.sh
+
+TARGET=work/$CONFIG_PROJECT
+
+echo !- Sync sources with server
+rm -f log/* upload_tmp/*
+ssh $CONFIG_SERVER mkdir -p work
+rsync -az --delete --exclude node_modules --exclude doc . $CONFIG_SERVER:$TARGET
+
+BRANCH=`git branch | awk '/\*/ { print $2; }'`
+REF=`git show-ref --heads $BRANCH`
+REF=${REF:0:7}
+rsync -az --delete $SCRIPT_DIR/_deploy_on_server.sh $CONFIG_SERVER:$TARGET
+ssh $CONFIG_SERVER $TARGET/_deploy_on_server.sh $CONFIG_PROJECT $REF

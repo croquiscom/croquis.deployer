@@ -1,0 +1,5 @@
+#!/bin/bash
+CWD=$PWD
+FOREVER=$CWD/node_modules/croquis.deployer/node_modules/.bin/forever
+
+$FOREVER stop $CWD/server.coffee
