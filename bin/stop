@@ -1,2 +1,3 @@
 #!/usr/bin/env node
-require('../lib/manager').stop(process.cwd()+'/server.coffee');
+var cwd = process.env.PWD;
+require('../lib/manager').stop(cwd+'/server.coffee');
