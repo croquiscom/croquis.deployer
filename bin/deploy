@@ -1,6 +1,5 @@
 #!/bin/bash
-SELF="${BASH_SOURCE[0]}"
-SCRIPT_DIR=`dirname "$SELF"`
+SCRIPT_DIR=$PWD/node_modules/croquis.deployer/bin
 
 source $SCRIPT_DIR/_read_config.sh
 

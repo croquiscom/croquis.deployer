@@ -1,24 +1,25 @@
 #!/bin/bash
 PROJECT_NAME=$1
 REF=$2
-TARGET=~/running
+ROOT=~/running
 VERSIONS=.versions
+DATE=`date +'%F,%R'`
+TARGET=$VERSIONS/$DATE,$REF
 
 SELF="${BASH_SOURCE[0]}"
 cd `dirname "$SELF"`
 
 echo !- Installing node modules
 npm install --production
-npm install forever
 
-echo !- Clean copy of repositories to $TARGET/$VERSIONS/$REF
-mkdir -p $TARGET/$VERSIONS
-rsync -az . $TARGET/$VERSIONS/$REF
+echo !- Clean copy of repositories to $ROOT/$TARGET
+mkdir -p $ROOT/$TARGET
+rsync -az . $ROOT/$TARGET
 
 echo !- Make live link
-cd $TARGET
+cd $ROOT
 rm -f $PROJECT_NAME
-ln -s $VERSIONS/$REF $PROJECT_NAME
+ln -s $TARGET $PROJECT_NAME
 cd $PROJECT_NAME
 
 echo !- Compile CoffeeScripts
