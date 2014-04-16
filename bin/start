@@ -1,7 +1,5 @@
-#!/bin/bash
-CWD=$PWD
-FOREVER=$CWD/node_modules/croquis.deployer/node_modules/.bin/forever
-
-$FOREVER stop $CWD/server.coffee
-export NODE_ENV=production
-$FOREVER start -c $CWD/node_modules/.bin/coffee $CWD/server.coffee
+#!/usr/bin/env node
+process.env.NODE_ENV = 'production';
+require('../lib/manager').start(process.cwd()+'/server.coffee', {
+  command: process.cwd()+'/node_modules/.bin/coffee'
+});

@@ -1,5 +1,2 @@
-#!/bin/bash
-CWD=$PWD
-FOREVER=$CWD/node_modules/croquis.deployer/node_modules/.bin/forever
-
-$FOREVER stop $CWD/server.coffee
+#!/usr/bin/env node
+require('../lib/manager').stop(process.cwd()+'/server.coffee');
