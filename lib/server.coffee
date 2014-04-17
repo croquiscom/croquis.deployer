@@ -10,31 +10,36 @@ config_dir = project_root + '/config'
 log = (msg) ->
   console.log "[#{Date.now()}] [server] #{msg}"
 
+debug = (msg) ->
+#  console.log msg
+
 registerHandlers = ->
   cluster.on 'exit', (worker, code, signal) ->
-    fork worker.exec
+    if not worker.prevent_restart
+      fork worker.exec, worker.graceful_exit
 
-fork = (exec) ->
+fork = (exec, graceful_exit) ->
+  debug 'forking... ' + exec
   cluster.setupMaster()
   cluster.settings.exec = exec
   worker = cluster.fork()
   worker.exec = exec
+  worker.graceful_exit = graceful_exit
+  return worker
 
 startWorkers = ->
   workers = yaml.safeLoad(fs.readFileSync project_root + '/deploy.yaml', 'utf-8').workers
   numCPUs = require('os').cpus().length
   if devel_mode
     numCPUs = 1
-  else if numCPUs < 2
-    numCPUs = 2
   for worker in workers
     if devel_mode and worker.production_only is true
       continue
-    if worker.instances is 'n'
+    if worker.instances is 'max'
       for i in [0...numCPUs]
-        fork app_dir + '/' + worker.app
+        fork app_dir + '/' + worker.app, worker.graceful_exit
     else
-      fork app_dir + '/' + worker.app
+      fork app_dir + '/' + worker.app, worker.graceful_exit
 
 destroyWorkers = (immediately) ->
   workers = []
@@ -43,14 +48,24 @@ destroyWorkers = (immediately) ->
 
   if immediately
     for worker in workers
+      debug 'killing... ' + worker.exec
       worker.kill 'SIGHUP'
   else
     killOne = ->
       if workers.length > 0
         worker = workers.pop()
-        worker.on 'disconnect', ->
+        worker.once 'disconnect', ->
           killOne()
-        worker.kill 'SIGHUP'
+        if worker.graceful_exit
+          worker.prevent_restart = true
+          fork worker.exec, worker.graceful_exit
+          .on 'listening', (data) ->
+            if data.port is 3000
+              debug 'killing... ' + worker.exec
+              worker.kill 'SIGHUP'
+        else
+          debug 'killing... ' + worker.exec
+          worker.kill 'SIGHUP'
     killOne()
 
 startWatch = ->
@@ -62,7 +77,7 @@ startWatch = ->
 
   watch = (file) ->
     return if extensions.indexOf(extname file) < 0
-    log 'watching... ' + file.substr(project_root.length+1)
+    #debug 'watching... ' + file.substr(project_root.length+1)
     fs.watchFile file, interval: 100, (curr, prev) ->
       if curr.mtime > prev.mtime
           log 'changed - ' + file
