@@ -11,7 +11,6 @@ cd `dirname "$SELF"`
 
 echo !- Installing project node modules
 npm install --production
-npm uninstall coffee-script
 
 echo !- Clean copy of repositories to $ROOT/$TARGET
 mkdir -p $ROOT/$TARGET
@@ -19,8 +18,17 @@ rsync -az . $ROOT/$TARGET
 
 echo !- Installing deployer node modules
 cd $ROOT
-npm install coffee-script forever
-npm install git+https://github.com/croquiscom/croquis.deployer.git
+cat <<EOF > package.json
+{
+  "dependencies": {
+    "coffee-script": "~1.7.1",
+    "croquis.deployer": "git+https://github.com/croquiscom/croquis.deployer.git",
+    "forever": "~0.11.0",
+    "js-yaml": "~3.0.2"
+  }
+}
+EOF
+npm install
 
 echo !- Make live link
 rm -f $PROJECT_NAME

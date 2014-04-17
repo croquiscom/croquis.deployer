@@ -1,7 +1,7 @@
 #!/bin/bash
-SCRIPT_DIR=$PWD/node_modules/croquis.deployer/bin
+DEPLOYER_DIR=$PWD/node_modules/croquis.deployer
 
-source $SCRIPT_DIR/_read_config.sh
+source $DEPLOYER_DIR/bin/_read_config.sh
 
 TARGET=work/$CONFIG_PROJECT
 
@@ -13,5 +13,6 @@ rsync -az --delete --exclude node_modules --exclude doc . $CONFIG_SERVER:$TARGET
 BRANCH=`git branch | awk '/\*/ { print $2; }'`
 REF=`git show-ref --heads $BRANCH`
 REF=${REF:0:7}
-rsync -az --delete $SCRIPT_DIR/_deploy_on_server.sh $CONFIG_SERVER:$TARGET
+rsync -az --delete $DEPLOYER_DIR/bin/_deploy_on_server.sh $CONFIG_SERVER:$TARGET
+rsync -az --delete $DEPLOYER_DIR/lib/server.coffee $CONFIG_SERVER:$TARGET
 ssh $CONFIG_SERVER $TARGET/_deploy_on_server.sh $CONFIG_PROJECT $REF
