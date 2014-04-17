@@ -59,10 +59,9 @@ destroyWorkers = (immediately) ->
         if worker.graceful_exit
           worker.prevent_restart = true
           fork worker.exec, worker.graceful_exit
-          .on 'listening', (data) ->
-            if data.port is 3000
-              debug 'killing... ' + worker.exec
-              worker.kill 'SIGHUP'
+          .once 'listening', ->
+            debug 'killing... ' + worker.exec
+            worker.kill 'SIGHUP'
         else
           debug 'killing... ' + worker.exec
           worker.kill 'SIGHUP'
