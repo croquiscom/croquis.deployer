@@ -9,25 +9,30 @@ TARGET=$VERSIONS/$DATE,$REF
 SELF="${BASH_SOURCE[0]}"
 cd `dirname "$SELF"`
 
-echo !- Installing node modules
+echo !- Installing project node modules
 npm install --production
+npm uninstall coffee-script
 
 echo !- Clean copy of repositories to $ROOT/$TARGET
 mkdir -p $ROOT/$TARGET
 rsync -az . $ROOT/$TARGET
 
-echo !- Make live link
+echo !- Installing deployer node modules
 cd $ROOT
+npm install coffee-script forever
+npm install git+https://github.com/croquiscom/croquis.deployer.git
+
+echo !- Make live link
 rm -f $PROJECT_NAME
 ln -s $TARGET $PROJECT_NAME
 cd $PROJECT_NAME
 
 echo !- Compile CoffeeScripts
-./node_modules/.bin/coffee -c app
-./node_modules/.bin/coffee -c config
+$ROOT/node_modules/.bin/coffee -c app
+$ROOT/node_modules/.bin/coffee -c config
 
 echo !- Run server
-./node_modules/.bin/croquis_start
+$ROOT/node_modules/.bin/croquis_start
 
 echo !- Build documentation
 cake doc > /dev/null &
