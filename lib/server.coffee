@@ -1,11 +1,30 @@
 cluster = require 'cluster'
 domain = require 'domain'
 fs = require 'fs'
+path = require 'path'
 yaml = require 'js-yaml'
 
 project_root = process.env.PWD or process.cwd()
 app_dir = project_root + '/app'
 config_dir = project_root + '/config'
+
+config = yaml.safeLoad(fs.readFileSync project_root + '/deploy.yaml', 'utf-8')
+for arg in process.argv
+  if arg is '-w'
+    do_watch = true
+  if arg is '-d'
+    devel_mode = true
+  if arg is '-l'
+    redirect_log = true
+
+if redirect_log
+  root = path.join process.env.HOME, '.croquis'
+  try fs.mkdirSync root, '0755'
+  logstream = fs.createWriteStream "#{root}/#{config.project}.log", flags: 'a+', mode: '0644', encoding: 'utf8'
+  process.stdout.write = (chunk, encoding, cb) ->
+    logstream.write chunk, encoding, cb
+  process.stderr.write = (chunk, encoding, cb) ->
+    logstream.write chunk, encoding, cb
 
 log = (msg) ->
   console.log "[#{Date.now()}] [server] #{msg}"
@@ -22,17 +41,23 @@ fork = (exec, graceful_exit) ->
   debug 'forking... ' + exec
   cluster.setupMaster()
   cluster.settings.exec = exec
+  if redirect_log
+    cluster.settings.silent = true
   worker = cluster.fork()
   worker.exec = exec
   worker.graceful_exit = graceful_exit
+  if redirect_log
+    worker.process.stdout.on 'data', (data) ->
+      logstream.write data
+    worker.process.stderr.on 'data', (data) ->
+      logstream.write data
   return worker
 
 startWorkers = ->
-  workers = yaml.safeLoad(fs.readFileSync project_root + '/deploy.yaml', 'utf-8').workers
   numCPUs = require('os').cpus().length
   if devel_mode
     numCPUs = 1
-  for worker in workers
+  for worker in config.workers
     if devel_mode and worker.production_only is true
       continue
     if worker.instances is 'max'
@@ -96,11 +121,6 @@ startWatch = ->
   traverse config_dir
 
 log 'Start'
-for arg in process.argv
-  if arg is '-w'
-    do_watch = true
-  if arg is '-d'
-    devel_mode = true
 registerHandlers()
 startWorkers()
 if do_watch
