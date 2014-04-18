@@ -18,13 +18,19 @@ for arg in process.argv
     redirect_log = true
 
 if redirect_log
+  logstream = undefined
+  openLogFile = ->
+    logstream.close() if logstream
+    logstream = fs.createWriteStream "#{root}/#{config.project}.log", flags: 'a+', mode: '0644', encoding: 'utf8'
   root = path.join process.env.HOME, '.croquis'
   try fs.mkdirSync root, '0755'
-  logstream = fs.createWriteStream "#{root}/#{config.project}.log", flags: 'a+', mode: '0644', encoding: 'utf8'
+  openLogFile()
   process.stdout.write = (chunk, encoding, cb) ->
     logstream.write chunk, encoding, cb
   process.stderr.write = (chunk, encoding, cb) ->
     logstream.write chunk, encoding, cb
+  process.on 'SIGUSR2', ->
+    openLogFile()
 
 log = (msg) ->
   console.log "[#{Date.now()}] [server] #{msg}"

@@ -29,3 +29,12 @@ bin/\_deploy\_on\_server.sh (서버)
 
 bin/start
 1. forever로 lib/server.coffee를 데몬으로 띄운다.
+
+# 시그널
+
+server.app 프로세스에 시그널을 보내면 다음과 같은 처리를 한다.
+
+* SIGHUP
+    * 모든 Worker를 재시작한다.
+* SIGUSR2
+    * 로그파일을 다시 연다.
