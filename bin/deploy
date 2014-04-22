@@ -6,7 +6,7 @@ source $DEPLOYER_DIR/bin/_read_config.sh
 TARGET=work/$CONFIG_PROJECT
 
 echo !- Sync sources with server
-rm -f log/* upload_tmp/*
+rm -f log/* upload_tmp/* cov.html
 ssh $CONFIG_SERVER mkdir -p work
 rsync -az --delete --exclude node_modules --exclude doc . $CONFIG_SERVER:$TARGET
 
