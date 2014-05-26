@@ -41,7 +41,6 @@ $ROOT/node_modules/.bin/coffee -c config
 
 echo !- Run server
 export PROJECT_ROOT=$ROOT/$CURRENT
-export DEPLOYER_ROOT=$ROOT/node_modules/croquis.deployer
 $DEPLOYER_ROOT/bin/start
 
 echo !- Build documentation
