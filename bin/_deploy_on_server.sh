@@ -1,10 +1,10 @@
 #!/bin/bash
 PROJECT_NAME=$1
 REF=$2
-ROOT=~/running
-VERSIONS=.versions
+ROOT=~/running/$PROJECT_NAME
 DATE=`date +'%F,%R'`
-TARGET=$VERSIONS/$DATE,$REF
+TARGET=versions/$DATE,$REF
+CURRENT=current
 
 SELF="${BASH_SOURCE[0]}"
 cd `dirname "$SELF"`
@@ -31,16 +31,16 @@ EOF
 npm install
 
 echo !- Make live link
-rm -f $PROJECT_NAME
-ln -s $TARGET $PROJECT_NAME
-cd $PROJECT_NAME
+rm -f $CURRENT
+ln -s $TARGET $CURRENT
+cd $CURRENT
 
 echo !- Compile CoffeeScripts
 $ROOT/node_modules/.bin/coffee -c app
 $ROOT/node_modules/.bin/coffee -c config
 
 echo !- Run server
-export PROJECT_ROOT=$ROOT/$PROJECT_NAME
+export PROJECT_ROOT=$ROOT/$CURRENT
 export DEPLOYER_ROOT=$ROOT/node_modules/croquis.deployer
 $DEPLOYER_ROOT/bin/start
 
