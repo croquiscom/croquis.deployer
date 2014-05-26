@@ -40,7 +40,9 @@ $ROOT/node_modules/.bin/coffee -c app
 $ROOT/node_modules/.bin/coffee -c config
 
 echo !- Run server
-$ROOT/node_modules/.bin/croquis_start
+export PROJECT_ROOT=$ROOT/$PROJECT_NAME
+export DEPLOYER_ROOT=$ROOT/node_modules/croquis.deployer
+$DEPLOYER_ROOT/bin/start
 
 echo !- Build documentation
 cake doc > /dev/null &

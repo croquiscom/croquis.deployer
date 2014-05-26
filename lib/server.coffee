@@ -4,7 +4,7 @@ fs = require 'fs'
 path = require 'path'
 yaml = require 'js-yaml'
 
-project_root = process.env.PWD or process.cwd()
+project_root = process.env.PROJECT_ROOT or process.env.PWD or process.cwd()
 app_dir = project_root + '/app'
 config_dir = project_root + '/config'
 

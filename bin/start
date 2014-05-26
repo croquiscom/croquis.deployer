@@ -1,4 +1,4 @@
 #!/usr/bin/env node
 var cwd = process.env.PWD;
 process.env.NODE_ENV = 'production';
-require('../lib/manager').start(cwd+'/server.coffee');
+require('../lib/manager').start(process.env.DEPLOYER_ROOT+'/lib/server.coffee');
