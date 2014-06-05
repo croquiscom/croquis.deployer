@@ -80,7 +80,7 @@ destroyWorkers = (immediately) ->
   if immediately
     for worker in workers
       debug 'killing... ' + worker.exec
-      worker.kill 'SIGHUP'
+      worker.kill 'SIGTERM'
   else
     killOne = ->
       if workers.length > 0
@@ -92,10 +92,10 @@ destroyWorkers = (immediately) ->
           fork worker.exec, worker.graceful_exit
           .once 'listening', ->
             debug 'killing... ' + worker.exec
-            worker.kill 'SIGHUP'
+            worker.kill 'SIGTERM'
         else
           debug 'killing... ' + worker.exec
-          worker.kill 'SIGHUP'
+          worker.kill 'SIGTERM'
     killOne()
 
 startWatch = ->
