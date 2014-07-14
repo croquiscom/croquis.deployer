@@ -67,9 +67,12 @@ startWorkers = ->
     if devel_mode and worker.production_only is true
       continue
     if worker.instances is 'max'
-      for i in [0...numCPUs]
-        fork app_dir + '/' + worker.app, worker.graceful_exit
+      count = numCPUs
     else
+      count = parseInt worker.instances
+    if not count>0
+      count = 1
+    for i in [0...count]
       fork app_dir + '/' + worker.app, worker.graceful_exit
 
 destroyWorkers = (immediately) ->
