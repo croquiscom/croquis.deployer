@@ -41,17 +41,16 @@ debug = (msg) ->
 registerHandlers = ->
   cluster.on 'exit', (worker, code, signal) ->
     if not worker.prevent_restart
-      fork worker.exec, worker.graceful_exit
+      fork worker.options
 
-fork = (exec, graceful_exit) ->
-  debug 'forking... ' + exec
+fork = (options) ->
+  debug 'forking... ' + options.exec
   cluster.setupMaster()
-  cluster.settings.exec = exec
+  cluster.settings.exec = options.exec
   if redirect_log
     cluster.settings.silent = true
-  worker = cluster.fork()
-  worker.exec = exec
-  worker.graceful_exit = graceful_exit
+  worker = cluster.fork WORKER_NUM: options.num
+  worker.options = options
   if redirect_log
     worker.process.stdout.on 'data', (data) ->
       logstream.write data
@@ -73,7 +72,7 @@ startWorkers = ->
     if not count>0
       count = 1
     for i in [0...count]
-      fork app_dir + '/' + worker.app, worker.graceful_exit
+      fork exec: app_dir + '/' + worker.app, num: i, graceful_exit: worker.graceful_exit
 
 destroyWorkers = (immediately) ->
   workers = []
@@ -82,7 +81,7 @@ destroyWorkers = (immediately) ->
 
   if immediately
     for worker in workers
-      debug 'killing... ' + worker.exec
+      debug 'killing... ' + worker.options.exec
       process.kill worker.process.pid, 'SIGTERM'
   else
     killOne = ->
@@ -90,14 +89,14 @@ destroyWorkers = (immediately) ->
         worker = workers.pop()
         worker.once 'disconnect', ->
           killOne()
-        if worker.graceful_exit
+        if worker.options.graceful_exit
           worker.prevent_restart = true
-          fork worker.exec, worker.graceful_exit
+          fork worker.options
           .once 'listening', ->
-            debug 'killing... ' + worker.exec
+            debug 'killing... ' + worker.options.exec
             process.kill worker.process.pid, 'SIGTERM'
         else
-          debug 'killing... ' + worker.exec
+          debug 'killing... ' + worker.options.exec
           process.kill worker.process.pid, 'SIGTERM'
     killOne()
 
