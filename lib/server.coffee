@@ -113,7 +113,7 @@ startWatch = ->
     fs.watchFile file, interval: 100, (curr, prev) ->
       if curr.mtime > prev.mtime
           log 'changed - ' + file
-          destroyWorkers true
+          destroyWorkers false
 
   traverse = (file) ->
     fs.stat file, (err, stat) ->
