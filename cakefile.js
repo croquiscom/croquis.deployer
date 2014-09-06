@@ -22,6 +22,7 @@ task('stop', 'Stops the app daemon', function() {
 });
 
 task('run', 'Runs the server', function () {
+  process.env.TZ = 'Etc/UTC';
   var command = path.resolve(require.resolve('coffee-script/register'), '../bin/coffee');
   var args = [__dirname + '/lib/server.coffee', '-w', '-d'];
   spawn(command, args, { stdio: 'inherit' });
