@@ -33,8 +33,7 @@ npm install
 echo !- Make live link
 rm -f $CURRENT
 ln -s $TARGET $CURRENT
-cd $CURRENT
 
 echo !- Run server
 export PROJECT_ROOT=$ROOT/$CURRENT
-$ROOT/node_modules/croquis.deployer/bin/start
+./node_modules/croquis.deployer/bin/start
