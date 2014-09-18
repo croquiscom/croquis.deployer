@@ -35,10 +35,6 @@ rm -f $CURRENT
 ln -s $TARGET $CURRENT
 cd $CURRENT
 
-echo !- Compile CoffeeScripts
-$ROOT/node_modules/.bin/coffee -c app
-$ROOT/node_modules/.bin/coffee -c config
-
 echo !- Run server
 export PROJECT_ROOT=$ROOT/$CURRENT
 $ROOT/node_modules/croquis.deployer/bin/start
