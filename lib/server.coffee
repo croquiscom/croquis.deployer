@@ -44,10 +44,13 @@ debug = (msg) ->
 registerHandlers = ->
   cluster.on 'exit', (worker, code, signal) ->
     if not worker.prevent_restart
-      fork worker.options
+      options = worker.options
+      if options.try < 3
+        fork options
 
 fork = (options) ->
   debug 'forking... ' + options.exec
+  options.try++
   cluster.setupMaster()
   cluster.settings.exec = options.exec
   if redirect_log
@@ -75,7 +78,7 @@ startWorkers = ->
     if not count>0
       count = 1
     for i in [0...count]
-      fork exec: app_dir + '/' + worker.app, num: i, graceful_exit: worker.graceful_exit
+      fork exec: app_dir + '/' + worker.app, num: i, graceful_exit: worker.graceful_exit, try: 0
 
 destroyWorkers = ->
   workers = []
@@ -87,6 +90,7 @@ destroyWorkers = ->
       worker = workers.pop()
       worker.once 'disconnect', ->
         killOne()
+      worker.options.try = 0
       if worker.options.graceful_exit
         worker.prevent_restart = true
         fork worker.options
