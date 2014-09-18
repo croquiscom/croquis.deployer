@@ -130,4 +130,5 @@ if do_watch
   startWatch()
 
 process.on 'SIGHUP', ->
+  log "Restart at #{fs.realpathSync project_root}"
   destroyWorkers()
