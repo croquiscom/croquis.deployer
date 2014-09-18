@@ -5,7 +5,8 @@
   "bin": {
     "croquis_deploy": "./bin/deploy",
     "croquis_start": "./bin/start",
-    "croquis_stop": "./bin/stop"
+    "croquis_stop": "./bin/stop",
+    "croquis_send_signal": "./bin/send_signal"
   },
   "dependencies": {
     "coffee-script": "~1.7.1",

@@ -1,0 +1,3 @@
+#!/usr/bin/env node
+var script = require('path').resolve(__dirname, '../lib', 'server.coffee');
+require('../lib/manager').sendSignal(script, process.argv[2]);
