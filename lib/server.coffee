@@ -21,7 +21,8 @@ if redirect_log
   logstream = undefined
   openLogFile = ->
     logstream.close() if logstream
-    logstream = fs.createWriteStream "#{root}/#{config.project}.log", flags: 'a+', mode: '0644', encoding: 'utf8'
+    flags = 0x0008 | 0x0200 | 0x0002 | 0x1000000 # a+(O_APPEND | O_CREAT | O_RDWR) | O_CLOEXEC
+    logstream = fs.createWriteStream "#{root}/#{config.project}.log", flags: flags, mode: '0644', encoding: 'utf8'
   root = path.join process.env.HOME, '.croquis'
   try fs.mkdirSync root, '0755'
   openLogFile()
