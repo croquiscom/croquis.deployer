@@ -74,31 +74,26 @@ startWorkers = ->
     for i in [0...count]
       fork exec: app_dir + '/' + worker.app, num: i, graceful_exit: worker.graceful_exit
 
-destroyWorkers = (immediately) ->
+destroyWorkers = ->
   workers = []
   for id, worker of cluster.workers
     workers.push worker
 
-  if immediately
-    for worker in workers
-      debug 'killing... ' + worker.options.exec
-      process.kill worker.process.pid, 'SIGTERM'
-  else
-    killOne = ->
-      if workers.length > 0
-        worker = workers.pop()
-        worker.once 'disconnect', ->
-          killOne()
-        if worker.options.graceful_exit
-          worker.prevent_restart = true
-          fork worker.options
-          .once 'listening', ->
-            debug 'killing... ' + worker.options.exec
-            process.kill worker.process.pid, 'SIGTERM'
-        else
+  killOne = ->
+    if workers.length > 0
+      worker = workers.pop()
+      worker.once 'disconnect', ->
+        killOne()
+      if worker.options.graceful_exit
+        worker.prevent_restart = true
+        fork worker.options
+        .once 'listening', ->
           debug 'killing... ' + worker.options.exec
           process.kill worker.process.pid, 'SIGTERM'
-    killOne()
+      else
+        debug 'killing... ' + worker.options.exec
+        process.kill worker.process.pid, 'SIGTERM'
+  killOne()
 
 startWatch = ->
   ignoreDirectories = []
@@ -113,7 +108,7 @@ startWatch = ->
     fs.watchFile file, interval: 100, (curr, prev) ->
       if curr.mtime > prev.mtime
           log 'changed - ' + file
-          destroyWorkers false
+          destroyWorkers()
 
   traverse = (file) ->
     fs.stat file, (err, stat) ->
@@ -135,4 +130,4 @@ if do_watch
   startWatch()
 
 process.on 'SIGHUP', ->
-  destroyWorkers false
+  destroyWorkers()
