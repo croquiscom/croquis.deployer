@@ -123,7 +123,7 @@ startWatch = ->
   traverse app_dir
   traverse config_dir
 
-log 'Start'
+log "Start at #{fs.realpathSync project_root}"
 registerHandlers()
 startWorkers()
 if do_watch
