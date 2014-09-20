@@ -62,6 +62,7 @@ fork = (options) ->
       logstream.write data
     worker.process.stderr.on 'data', (data) ->
       logstream.write data
+  worker.once 'listening', -> worker.options.try = 0
   return worker
 
 startWorkers = ->
