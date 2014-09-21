@@ -9,8 +9,8 @@
     "croquis_send_signal": "./bin/send_signal"
   },
   "dependencies": {
-    "coffee-script": "~1.7.1",
-    "forever": "~0.11.0",
-    "js-yaml": "~3.0.2"
+    "coffee-script": "~1.8.0",
+    "forever": "~0.11.1",
+    "js-yaml": "~3.2.2"
   }
 }
