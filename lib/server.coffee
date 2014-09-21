@@ -36,7 +36,7 @@ if redirect_log
     destroyWorkers()
 
 log = (msg) ->
-  console.log "[#{Date.now()}] [server] #{msg}"
+  console.log "[#{Date.now()}] [deployer] #{msg}"
 
 debug = (msg) ->
 #  console.log msg
@@ -49,7 +49,7 @@ registerHandlers = ->
         fork options
 
 fork = (options) ->
-  debug 'forking... ' + options.exec
+  log 'forking... ' + options.exec
   options.try++
   cluster.setupMaster()
   cluster.settings.exec = options.exec
