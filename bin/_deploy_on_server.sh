@@ -21,10 +21,10 @@ cd $ROOT
 cat <<EOF > package.json
 {
   "dependencies": {
-    "coffee-script": "~1.7.1",
+    "coffee-script": "~1.8.0",
     "croquis.deployer": "git+https://github.com/croquiscom/croquis.deployer.git",
-    "forever": "~0.11.0",
-    "js-yaml": "~3.0.2"
+    "forever": "~0.11.1",
+    "js-yaml": "~3.2.2"
   }
 }
 EOF
