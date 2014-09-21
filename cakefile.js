@@ -1,8 +1,6 @@
 var path = require('path');
 var spawn = require('child_process').spawn;
 
-process.env.PWD = process.cwd();
-
 task('deploy', 'Deploys this app', function() {
   var command = __dirname + '/bin/deploy';
   var args = [];
