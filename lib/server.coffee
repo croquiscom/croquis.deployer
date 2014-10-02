@@ -7,6 +7,10 @@ yaml = require 'js-yaml'
 project_root = process.env.PROJECT_ROOT
 if /versions\/\d{4}-\d{2}-\d{2},\d{2}:\d{2},[a-z0-9]{7}$/.test project_root
   project_root = path.resolve project_root, '..', '..', 'current'
+project_root = path.relative process.cwd(), project_root
+if not project_root
+  project_root = '.'
+
 app_dir = project_root + '/app'
 config_dir = project_root + '/config'
 
