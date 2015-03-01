@@ -8,9 +8,12 @@
     "croquis_stop": "./bin/stop",
     "croquis_send_signal": "./bin/send_signal"
   },
+  "engines": {
+    "node": ">= 0.12"
+  },
   "dependencies": {
-    "coffee-script": "~1.8.0",
-    "forever": "~0.11.1",
-    "js-yaml": "~3.2.2"
+    "coffee-script": "~1.9.1",
+    "forever": "~0.14.1",
+    "js-yaml": "~3.2.7"
   }
 }
