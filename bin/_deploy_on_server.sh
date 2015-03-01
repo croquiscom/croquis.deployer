@@ -9,6 +9,9 @@ CURRENT=current
 SELF="${BASH_SOURCE[0]}"
 cd `dirname "$SELF"`
 
+NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+
 echo !- Installing project node modules
 npm install --production
 
