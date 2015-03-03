@@ -14,6 +14,8 @@ if not project_root
 app_dir = project_root + '/app'
 config_dir = project_root + '/config'
 
+shutdowning = false
+
 config = yaml.safeLoad(fs.readFileSync project_root + '/deploy.yaml', 'utf-8')
 for arg in process.argv
   if arg is '-w'
@@ -49,6 +51,11 @@ debug = (msg) ->
 
 registerHandlers = ->
   cluster.on 'exit', (worker, code, signal) ->
+    if shutdowning
+      if Object.keys(cluster.workers).length is 0
+        console.log "[#{Date.now()}] [deployer] Terminate"
+        process.exit 0
+      return
     if not worker.prevent_restart
       options = worker.options
       if options.try < 3
@@ -146,3 +153,5 @@ if do_watch
 process.on 'SIGHUP', ->
   log "Restart at #{fs.realpathSync project_root}"
   destroyWorkers()
+process.on 'SIGINT', ->
+  shutdowning = true
