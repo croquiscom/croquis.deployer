@@ -40,3 +40,6 @@ ln -s $TARGET $CURRENT
 echo !- Run server
 export PROJECT_ROOT=$ROOT/$CURRENT
 ./node_modules/croquis.deployer/bin/start
+
+echo !- Install Cron jobs
+./node_modules/.bin/coffee ./node_modules/croquis.deployer/bin/install_cron_jobs.coffee

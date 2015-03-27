@@ -17,4 +17,6 @@ BRANCH=`git branch | awk '/\*/ { print $2; }'`
 REF=`git show-ref --heads $BRANCH`
 REF=${REF:0:7}
 rsync -az --delete $DEPLOYER_DIR/bin/_deploy_on_server.sh $CONFIG_SERVER:$TARGET
+rsync -az --delete $DEPLOYER_DIR/bin/run_job.sh $CONFIG_SERVER:$TARGET
+rsync -az --delete $DEPLOYER_DIR/bin/on_boot.sh $CONFIG_SERVER:$TARGET
 ssh $CONFIG_SERVER $TARGET/_deploy_on_server.sh $CONFIG_PROJECT $REF
