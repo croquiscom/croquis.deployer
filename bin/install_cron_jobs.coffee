@@ -17,4 +17,5 @@ crontab.push ''
 crontab = crontab.join('\n')
 
 fs.writeFileSync "#{project_root}/.crontab", crontab
+child_process.execSync "crontab -l | grep -v #{project_root} >> #{project_root}/.crontab"
 child_process.execSync "crontab #{project_root}/.crontab"
