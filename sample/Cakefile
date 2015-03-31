@@ -1,0 +1,8 @@
+fs = require 'fs'
+spawn = require('child_process').spawn
+child = undefined
+
+require '../cakefile'
+
+process.on 'SIGTERM', ->
+  child.kill 'SIGTERM'

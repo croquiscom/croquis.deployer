@@ -1,5 +1,9 @@
 #!/bin/bash
 DEPLOYER_DIR=$PWD/node_modules/croquis.deployer
+if [ ! -d $DEPLOYER_DIR ]; then
+  # for sample
+  DEPLOYER_DIR=$PWD/..
+fi
 
 source $DEPLOYER_DIR/bin/_read_config.sh
 

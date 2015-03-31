@@ -1,0 +1,11 @@
+server: 192.168.23.127
+project: sample
+
+workers:
+  - app: app.coffee
+    instances: max
+    graceful_exit: true
+
+cron_jobs:
+  - pattern: '*/3 * * * *'
+    job: ping
