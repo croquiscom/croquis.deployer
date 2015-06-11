@@ -8,13 +8,30 @@ if /versions\/\d{4}-\d{2}-\d{2},\d{2}:\d{2},[a-z0-9]{7}$/.test project_root
   project_root = path.resolve project_root, '..', '..', 'current'
 
 config = yaml.safeLoad(fs.readFileSync project_root + '/deploy.yaml', 'utf-8')
-if not Array.isArray config.cron_jobs
-  return
-crontab = config.cron_jobs.map (job) ->
-  "#{job.pattern} #{project_root}/run_job.sh #{job.job}"
+
+# add jobs in cron_jobs
+if Array.isArray config.cron_jobs
+  crontab = config.cron_jobs.map (job) ->
+    "#{job.pattern} #{project_root}/run_job.sh #{job.job}"
+else
+  crontab = []
+
+# add jobs in cron_jobs_dir
+if config.cron_jobs_dir
+  cron_jobs_dir = path.resolve project_root, config.cron_jobs_dir
+  files = fs.readdirSync cron_jobs_dir
+  for file in files
+    continue if not /\.coffee/.test file
+    lines = fs.readFileSync(path.resolve(cron_jobs_dir, file), 'utf-8').split '\n'
+    for line in lines
+      if /^#\s*cron: (.*)$/.test line
+        crontab.push "#{RegExp.$1} #{project_root}/run_job.sh #{file.substr 0, file.length-7}"
+
+# add run-worker-on-boot job
 crontab.push "@reboot #{project_root}/on_boot.sh"
-crontab.push ''
-crontab = crontab.join('\n')
+
+# install crontab
+crontab = crontab.join('\n') + '\n'
 
 fs.writeFileSync "#{project_root}/.crontab", crontab
 try child_process.execSync "crontab -l | grep -v #{project_root} >> #{project_root}/.crontab"
