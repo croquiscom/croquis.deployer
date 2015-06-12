@@ -5,4 +5,4 @@ cd `dirname "$SELF"`
 
 export NODE_ENV=production
 
-$HOME/.nvm/nvm-exec coffee ./app/jobs/$1.coffee
+nice -n 15 $HOME/.nvm/nvm-exec coffee ./app/jobs/$1.coffee
