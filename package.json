@@ -1,7 +1,6 @@
 {
-  "name": "croquis.deployer",
-  "version": "0.1.0",
-  "private": true,
+  "name": "@croquiscom/croquis.deployer",
+  "version": "0.5.0",
   "bin": {
     "croquis_deploy": "./bin/deploy",
     "croquis_start": "./bin/start",
@@ -12,8 +11,8 @@
     "node": ">= 0.12"
   },
   "dependencies": {
-    "coffee-script": "~1.9.1",
-    "forever": "~0.14.1",
-    "js-yaml": "~3.2.7"
+    "coffee-script": "^1.9.3",
+    "forever": "^0.15.0",
+    "js-yaml": "^3.3.1"
   }
 }
