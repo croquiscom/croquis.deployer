@@ -1,5 +1,5 @@
 #!/bin/bash
-DEPLOYER_DIR=$PWD/node_modules/croquis.deployer
+DEPLOYER_DIR=$PWD/node_modules/@croquiscom/croquis.deployer
 if [ ! -d $DEPLOYER_DIR ]; then
   # for sample
   DEPLOYER_DIR=$PWD/..
