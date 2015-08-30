@@ -2,7 +2,7 @@
 PROJECT_NAME=$1
 REF=$2
 ROOT=~/running/$PROJECT_NAME
-DATE=`date +'%F,%R'`
+DATE=`date +'%Y-%m-%d,%H-%M'`
 TARGET=versions/$DATE,$REF
 CURRENT=current
 
