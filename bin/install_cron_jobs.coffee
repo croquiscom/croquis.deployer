@@ -31,8 +31,8 @@ if config.cron_jobs_dir
 crontab.push "@reboot #{project_root}/on_boot.sh"
 
 # install crontab
-crontab = crontab.join('\n') + '\n'
+crontab = 'CONTENT_TYPE="text/plain; charset=utf-8"\n' + crontab.join('\n') + '\n'
 
 fs.writeFileSync "#{project_root}/.crontab", crontab
-try child_process.execSync "crontab -l | grep -v #{project_root} >> #{project_root}/.crontab"
+try child_process.execSync "crontab -l | grep -v #{project_root} | grep -v CONTENT_TYPE >> #{project_root}/.crontab"
 try child_process.execSync "crontab #{project_root}/.crontab"
