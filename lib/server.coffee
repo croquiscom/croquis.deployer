@@ -39,9 +39,6 @@ if redirect_log
     logstream.write chunk, encoding, cb
   process.on 'SIGUSR2', ->
     openLogFile()
-    # Node v0.10에서는 fork시 자식이 file descriptor를 복사해간다.
-    # 따라서 자식을 다시 시작해야지만 이전 로그에 대한 file descriptor가 모두 닫힌다.
-    destroyWorkers()
 
 log = (msg) ->
   console.log "[#{Date.now()}] [deployer] #{msg}"
