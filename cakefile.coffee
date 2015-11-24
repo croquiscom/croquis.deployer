@@ -18,6 +18,11 @@ task 'stop', 'Stops the app daemon', ->
   args = []
   spawn command, args, stdio: 'inherit'
 
+task 'logrotate', 'Rotates the log', ->
+  command = __dirname + '/bin/send_signal'
+  args = ['SIGUSR2']
+  spawn command, args, stdio: 'inherit'
+
 task 'run', 'Runs the server', ->
   process.env.TZ = 'Etc/UTC'
   command = path.resolve require.resolve('coffee-script/register'), '../bin/coffee'
