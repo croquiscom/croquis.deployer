@@ -37,6 +37,22 @@ echo !- Make live link
 rm -f $CURRENT
 ln -s $TARGET $CURRENT
 
+echo !- Install logrotate
+cat <<EOF > $CURRENT/logrotate.conf
+$HOME/.croquis/$PROJECT_NAME.log {
+    daily
+    rotate 7
+    missingok
+    compress
+    delaycompress
+    notifempty
+    sharedscripts
+    postrotate
+        cake logrotate
+    endscript
+}
+EOF
+
 echo !- Run server
 export PROJECT_ROOT=$ROOT/$CURRENT
 ./node_modules/@croquiscom/croquis.deployer/bin/start
