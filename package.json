@@ -8,11 +8,11 @@
     "croquis_send_signal": "./bin/send_signal"
   },
   "engines": {
-    "node": ">= 0.12"
+    "node": ">= 4.2"
   },
   "dependencies": {
     "coffee-script": "^1.10.0",
     "forever": "^0.15.1",
-    "js-yaml": "^3.4.2"
+    "js-yaml": "^3.4.5"
   }
 }
