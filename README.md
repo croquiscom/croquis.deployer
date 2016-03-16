@@ -3,8 +3,8 @@
 # 적용
 
 1. deploy.yaml을 작성한다.
-1. devDependencies에 "croquis.deployer": "git+https://github.com/croquiscom/croquis.deployer.git" 추가
-1. Cakefile에 require 'croquis.deployer/cakefile' 추가
+1. devDependencies에 "@croquiscom/croquis.deployer": "^0.6.0" 추가
+1. Cakefile에 require '@croquiscom/croquis.deployer/cakefile' 추가
 
 # 사용법
 
@@ -14,8 +14,13 @@
 * cake start - 실 서버에서 데몬으로 서비스 실행
 * cake stop - 데몬 중지
 
-# 로직
+# EC2 배포
 
+## deploy.yaml 설정
+* server: 배포할 서버 주소
+* project: 프로젝트 명. 디렉토리 이름이 된다
+
+## 과정
 cake deploy를 실행하면
 
 bin/deploy (클라이언트)
@@ -30,6 +35,36 @@ bin/\_deploy\_on\_server.sh (서버)
 
 bin/start
 1. forever로 lib/server.coffee를 데몬으로 띄운다.
+
+# Elastic Beanstalk 배포
+
+## deploy.yaml 설정
+* elasticbeanstalk.region: 배포 리전
+* elasticbeanstalk.application\_name: 어플리케이션 이름
+* elasticbeanstalk.environment\_name: 환경 이름
+
+## AWS 설정
+* awscli 설치: pip install awscli
+* jq 설치: brew install jq
+* IAM 설정
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "elasticbeanstalk:*",
+                "elasticloadbalancing:*",
+                "autoscaling:*",
+                "s3:*",
+                "cloudformation:*"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+```
 
 # 시그널
 
