@@ -29,4 +29,14 @@ function deploy_ec2 {
   ssh $CONFIG_SERVER $TARGET/_deploy_on_server.sh $CONFIG_PROJECT $REF
 }
 
-deploy_ec2
+function deploy_eb {
+  DATE=`date +'%Y%m%d-%H%M'`
+  FILENAME=$DATE-$REF.zip
+  zip -q -r $FILENAME .ebextensions * -x "node_modules/*" "doc/*" "test/*" "crojsdoc.yaml" "Cakefile"
+}
+
+if [[ -z "$CONFIG_ELASTICBEANSTALK_REGION" ]]; then
+  deploy_ec2
+else
+  deploy_eb
+fi

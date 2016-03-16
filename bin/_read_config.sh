@@ -27,11 +27,14 @@ fi
 eval $(parse_yaml $CONFIG "CONFIG_")
 
 if [ -z "$CONFIG_SERVER" ]; then
-  echo CONFIG server is empty
-  exit 1
+  if [[ -z "$CONFIG_ELASTICBEANSTALK_REGION" ]]; then
+    echo CONFIG server is empty
+    exit 1
+  fi
+else
+  if [ -z "$CONFIG_PROJECT" ]; then
+    echo CONFIG project is empty
+    exit 1
+  fi
 fi
 
-if [ -z "$CONFIG_PROJECT" ]; then
-  echo CONFIG project is empty
-  exit 1
-fi
