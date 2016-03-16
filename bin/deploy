@@ -1,26 +1,32 @@
 #!/bin/bash
+
 DEPLOYER_DIR=$PWD/node_modules/@croquiscom/croquis.deployer
 if [ ! -d $DEPLOYER_DIR ]; then
   # for sample
   DEPLOYER_DIR=$PWD/..
 fi
 
-source $DEPLOYER_DIR/bin/_read_config.sh
-
-TARGET=work/$CONFIG_PROJECT
-
-echo !- Build documentation
-cake doc
-
-echo !- Sync sources with server
-rm -f log/* upload_tmp/* cov.html
-ssh $CONFIG_SERVER mkdir -p work
-rsync -az --delete --exclude node_modules --copy-unsafe-links . $CONFIG_SERVER:$TARGET
-
 BRANCH=`git branch | awk '/\*/ { print $2; }'`
 REF=`git show-ref --heads $BRANCH`
 REF=${REF:0:7}
-rsync -az --delete $DEPLOYER_DIR/bin/_deploy_on_server.sh $CONFIG_SERVER:$TARGET
-rsync -az --delete $DEPLOYER_DIR/bin/run_job.sh $CONFIG_SERVER:$TARGET
-rsync -az --delete $DEPLOYER_DIR/bin/on_boot.sh $CONFIG_SERVER:$TARGET
-ssh $CONFIG_SERVER $TARGET/_deploy_on_server.sh $CONFIG_PROJECT $REF
+
+source $DEPLOYER_DIR/bin/_read_config.sh
+
+#echo !- Build documentation
+#cake doc
+
+function deploy_ec2 {
+  TARGET=work/$CONFIG_PROJECT
+
+  echo !- Sync sources with server
+  rm -f log/* upload_tmp/* cov.html
+  ssh $CONFIG_SERVER mkdir -p work
+  rsync -az --delete --exclude node_modules --copy-unsafe-links . $CONFIG_SERVER:$TARGET
+
+  rsync -az --delete $DEPLOYER_DIR/bin/_deploy_on_server.sh $CONFIG_SERVER:$TARGET
+  rsync -az --delete $DEPLOYER_DIR/bin/run_job.sh $CONFIG_SERVER:$TARGET
+  rsync -az --delete $DEPLOYER_DIR/bin/on_boot.sh $CONFIG_SERVER:$TARGET
+  ssh $CONFIG_SERVER $TARGET/_deploy_on_server.sh $CONFIG_PROJECT $REF
+}
+
+deploy_ec2
