@@ -42,6 +42,12 @@ function deploy_eb {
   STORAGE_LOCATION=`aws --region $CONFIG_ELASTICBEANSTALK_REGION elasticbeanstalk create-storage-location | jq -r ".S3Bucket"`
   aws --region $CONFIG_ELASTICBEANSTALK_REGION s3 cp "$FILENAME" "s3://$STORAGE_LOCATION/$CONFIG_ELASTICBEANSTALK_APPLICATION_NAME/$FILENAME"
   rm $FILENAME
+
+  echo !- Make an application version
+  aws --region $CONFIG_ELASTICBEANSTALK_REGION elasticbeanstalk create-application-version --application-name "$CONFIG_ELASTICBEANSTALK_APPLICATION_NAME" --version-label "$FILENAME" --source-bundle "S3Bucket=$STORAGE_LOCATION,S3Key=$CONFIG_ELASTICBEANSTALK_APPLICATION_NAME/$FILENAME" --process
+
+  echo !- Activate new application version
+  aws --region $CONFIG_ELASTICBEANSTALK_REGION elasticbeanstalk update-environment --environment-name "$CONFIG_ELASTICBEANSTALK_ENVIRONMENT_NAME" --version-label "$FILENAME"
 }
 
 if [[ -z "$CONFIG_ELASTICBEANSTALK_REGION" ]]; then
