@@ -30,9 +30,18 @@ function deploy_ec2 {
 }
 
 function deploy_eb {
+  command -v aws >/dev/null 2>&1 || { echo Please intsall AWS CLI via 'pip install awscli'; exit; }
+  command -v jq >/dev/null 2>&1 || { echo Please intsall jq via 'brew install jq'; exit; }
+
+  echo !- Make archive
   DATE=`date +'%Y%m%d-%H%M'`
   FILENAME=$DATE-$REF.zip
   zip -q -r $FILENAME .ebextensions * -x "node_modules/*" "doc/*" "test/*" "crojsdoc.yaml" "Cakefile"
+
+  echo !- Upload to S3
+  STORAGE_LOCATION=`aws --region $CONFIG_ELASTICBEANSTALK_REGION elasticbeanstalk create-storage-location | jq -r ".S3Bucket"`
+  aws --region $CONFIG_ELASTICBEANSTALK_REGION s3 cp "$FILENAME" "s3://$STORAGE_LOCATION/$CONFIG_ELASTICBEANSTALK_APPLICATION_NAME/$FILENAME"
+  rm $FILENAME
 }
 
 if [[ -z "$CONFIG_ELASTICBEANSTALK_REGION" ]]; then
