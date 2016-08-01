@@ -27,7 +27,9 @@ task 'run', 'Runs the server', ->
   process.env.TZ = 'Etc/UTC'
   command = path.resolve require.resolve('coffee-script/register'), '../bin/coffee'
   args = [__dirname + '/lib/server.coffee', '-w', '-d']
-  spawn command, args, stdio: 'inherit'
+  child = spawn command, args, stdio: 'inherit'
+  process.on 'SIGTERM', ->
+    child.kill 'SIGTERM'
 
 task 'run:test', 'Runs the test server', ->
   process.env.NODE_ENV = 'test'
