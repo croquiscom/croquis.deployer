@@ -62,7 +62,8 @@ fork = (options) ->
   log 'forking... ' + options.exec
   options.try++
   cluster.setupMaster()
-  cluster.settings.exec = options.exec
+  cluster.settings.exec = __dirname + '/run_app.coffee'
+  cluster.settings.args = [project_root, options.exec]
   if redirect_log
     cluster.settings.silent = true
   worker = cluster.fork WORKER_NUM: options.num
