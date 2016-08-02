@@ -2,6 +2,7 @@ path = require 'path'
 {spawn} = require 'child_process'
 
 process.env.PROJECT_ROOT = process.cwd()
+process.env.TZ = 'Etc/UTC'
 
 task 'deploy', 'Deploys this app', ->
   command = __dirname + '/bin/deploy'
@@ -24,7 +25,6 @@ task 'logrotate', 'Rotates the log', ->
   spawn command, args, stdio: 'inherit'
 
 task 'run', 'Runs the server', ->
-  process.env.TZ = 'Etc/UTC'
   command = path.resolve require.resolve('coffee-script/register'), '../bin/coffee'
   args = [__dirname + '/lib/server.coffee', '-w', '-d']
   child = spawn command, args, stdio: 'inherit'
