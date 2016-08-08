@@ -27,7 +27,7 @@ cat <<EOF > package.json
 {
   "dependencies": {
     "coffee-script": "^1.10.0",
-    "@croquiscom/croquis.deployer": "^0.7.4",
+    "@croquiscom/croquis.deployer": "^0.7.5",
     "forever": "^0.15.2",
     "js-yaml": "^3.6.1"
   }
