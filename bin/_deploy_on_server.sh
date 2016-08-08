@@ -14,6 +14,9 @@ NVM_DIR="$HOME/.nvm"
 
 echo !- Installing project node modules
 npm install --production
+# deployer 모듈로 설치되므로 app 모듈에서는 삭제한다.
+# (두개가 있으면 forever가 server 프로세스를 다른 스크립트로 인식할 가능성이 있다)
+npm uninstall @croquiscom/croquis.deployer > /dev/null 2&> 1
 
 echo !- Clean copy of repositories to $ROOT/$TARGET
 mkdir -p $ROOT/$TARGET
