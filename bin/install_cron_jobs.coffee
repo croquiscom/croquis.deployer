@@ -27,11 +27,12 @@ if config.cron_jobs_dir
       if /^#\s*cron: (.*)$/.test line
         crontab.push "#{RegExp.$1} #{project_root}/run_job.sh #{file.substr 0, file.length-7}"
 
-# add run-worker-on-boot job
-crontab.push "@reboot #{project_root}/on_boot.sh"
+if config.workers
+  # add run-worker-on-boot job
+  crontab.push "@reboot #{project_root}/on_boot.sh"
 
-# add logrotate job
-crontab.push "0 * * * * cd #{project_root} && /usr/sbin/logrotate -s #{process.env.HOME}/.croquis/logrotate.status logrotate.conf"
+  # add logrotate job
+  crontab.push "0 * * * * cd #{project_root} && /usr/sbin/logrotate -s #{process.env.HOME}/.croquis/logrotate.status logrotate.conf"
 
 # install crontab
 crontab = 'CONTENT_TYPE="text/plain; charset=utf-8"\n' + crontab.join('\n') + '\n'
