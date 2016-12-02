@@ -2,7 +2,7 @@ worker_num = Number(process.env.WORKER_NUM) or 0
 process.env.NODE_CONFIG_DIR = __dirname + '/../config'
 
 CONFIG = require 'config'
-crary = require 'crary'
+crary = require '@croquiscom/crary'
 http = require 'http'
 
 app = crary.express.createApp
