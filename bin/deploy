@@ -38,7 +38,8 @@ function deploy_ec2 {
   rm -f log/* upload_tmp/* cov.html
   if [[ -n "$CONFIG_BROKER_SERVER" ]]; then
     SERVER_HOST=`echo $CONFIG_SERVER | sed s/.*@//`
-    PROXY_COMMAND="ssh -q -W $SERVER_HOST:22 $CONFIG_BROKER_SERVER"
+    PROXY_COMMAND="ssh -q -W %h:%p $CONFIG_BROKER_SERVER"
+    ssh -o 'ForwardAgent yes' $CONFIG_BROKER_SERVER ssh-add
   fi
   run_remote_command mkdir -p work
   remote_sync --exclude node_modules --copy-unsafe-links .
@@ -46,6 +47,9 @@ function deploy_ec2 {
   remote_sync $DEPLOYER_DIR/bin/run_job.sh
   remote_sync $DEPLOYER_DIR/bin/on_boot.sh
   run_remote_command $TARGET/_deploy_on_server.sh $CONFIG_PROJECT $REF
+  if [[ -n "$CONFIG_BROKER_SERVER" ]]; then
+    ssh -o 'ForwardAgent yes' $CONFIG_BROKER_SERVER ssh-add -d /home/croquis/.ssh/id_rsa
+  fi
 }
 
 function deploy_eb {
