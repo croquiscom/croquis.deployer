@@ -12,7 +12,9 @@ task 'deploy', 'Deploys this app', ->
 task 'start', 'Starts this app as daemon', ->
   command = __dirname + '/bin/start'
   args = []
-  spawn command, args, stdio: 'inherit'
+  child = spawn command, args, stdio: 'inherit'
+  child.on 'exit', (code) ->
+    process.exit code
 
 task 'stop', 'Stops the app daemon', ->
   command = __dirname + '/bin/stop'
