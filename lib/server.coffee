@@ -157,3 +157,7 @@ process.on 'SIGHUP', ->
 process.on 'SIGINT', ->
   shutdowning = true
   exitIfNoWorkers()
+
+# server.coffee가 그냥 종료되면 forever가 다시 띄운다
+# 혹시 worker에 문제가 있어서 실행이 안 되도 server.coffee는 유지되게 한다
+setTimeout (->), 1000 * 1000 * 1000
