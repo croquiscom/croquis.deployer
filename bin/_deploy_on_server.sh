@@ -57,7 +57,7 @@ EOF
 
 echo !- Run server
 export PROJECT_ROOT=$ROOT/$CURRENT
-./node_modules/@croquiscom/croquis.deployer/bin/start || echo ***** FAIL TO START *****
+./node_modules/@croquiscom/croquis.deployer/bin/start || echo '(((***** FAIL TO START *****)))'
 
 echo !- Install Cron jobs
 ./node_modules/.bin/coffee ./node_modules/@croquiscom/croquis.deployer/bin/install_cron_jobs.coffee
