@@ -117,6 +117,9 @@ restartWorkers = ->
         .once 'listening', ->
           debug 'killing... ' + worker.options.exec
           process.kill worker.process.pid, 'SIGTERM'
+        .once 'exit', ->
+          # fork에 문제가 생긴 경우 kill 과정을 중단한다
+          workers.length = 0
       else
         debug 'killing... ' + worker.options.exec
         process.kill worker.process.pid, 'SIGTERM'
