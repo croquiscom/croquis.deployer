@@ -15,7 +15,8 @@ app = crary.express.createApp
   routers: require './routes'
 server = http.createServer app
 
-server.listen 3000, ->
+port = if worker_num is 9999 then 9999 else 3000
+server.listen port, ->
   console.log "[#{Date.now()}] [server#{worker_num}] Started"
 
 _shutdowning = false
