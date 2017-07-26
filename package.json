@@ -1,6 +1,6 @@
 {
   "name": "@croquiscom/croquis.deployer",
-  "version": "0.7.12",
+  "version": "0.8.0",
   "bin": {
     "croquis_deploy": "./bin/deploy",
     "croquis_start": "./bin/start",
@@ -8,8 +8,8 @@
     "croquis_send_signal": "./bin/send_signal"
   },
   "dependencies": {
-    "coffee-script": "^1.12.4",
+    "coffee-script": "^1.12.7",
     "forever": "^0.15.3",
-    "js-yaml": "^3.8.2"
+    "js-yaml": "^3.9.0"
   }
 }
