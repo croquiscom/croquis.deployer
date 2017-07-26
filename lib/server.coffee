@@ -95,10 +95,15 @@ startWorkers = ->
     for i in [0...count]
       fork exec: app_dir + '/' + worker.app, num: i, graceful_exit: worker.graceful_exit, try: 0
 
-destroyWorkers = ->
+restartWorkers = ->
   workers = []
   for id, worker of cluster.workers
     workers.push worker
+
+  if workers.length is 0
+    # worker가 정상적으로 뜨지 않은 경우 그냥 시작한다
+    startWorkers()
+    return
 
   killOne = ->
     if workers.length > 0
@@ -130,7 +135,7 @@ startWatch = ->
     fs.watchFile file, interval: 100, (curr, prev) ->
       if curr.mtime > prev.mtime
           log 'changed - ' + file
-          destroyWorkers()
+          restartWorkers()
 
   traverse = (file) ->
     fs.stat file, (err, stat) ->
@@ -153,7 +158,7 @@ if do_watch
 
 process.on 'SIGHUP', ->
   log "Restart at #{fs.realpathSync project_root}"
-  destroyWorkers()
+  restartWorkers()
 process.on 'SIGINT', ->
   shutdowning = true
   exitIfNoWorkers()
