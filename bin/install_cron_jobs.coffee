@@ -32,7 +32,7 @@ if config.workers
   crontab.push "@reboot #{project_root}/on_boot.sh"
 
   # add logrotate job
-  crontab.push "0 * * * * cd #{project_root} && /usr/sbin/logrotate -s #{process.env.HOME}/.croquis/logrotate.status logrotate.conf"
+  crontab.push "0 * * * * cd #{project_root} && /usr/sbin/logrotate -s #{process.env.HOME}/.croquis/logrotate_#{config.project}.status logrotate.conf"
 
 # install crontab
 crontab = 'CONTENT_TYPE="text/plain; charset=utf-8"\n' + crontab.join('\n') + '\n'
