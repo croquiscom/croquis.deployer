@@ -46,12 +46,15 @@ log = (msg) ->
 debug = (msg) ->
 #  console.log msg
 
+exitIfNoWorkers = ->
+  if Object.keys(cluster.workers).length is 0
+    console.log "[#{Date.now()}] [deployer] Terminate"
+    process.exit 0
+
 registerHandlers = ->
   cluster.on 'exit', (worker, code, signal) ->
     if shutdowning
-      if Object.keys(cluster.workers).length is 0
-        console.log "[#{Date.now()}] [deployer] Terminate"
-        process.exit 0
+      exitIfNoWorkers()
       return
     if not worker.prevent_restart
       options = worker.options
@@ -153,3 +156,4 @@ process.on 'SIGHUP', ->
   destroyWorkers()
 process.on 'SIGINT', ->
   shutdowning = true
+  exitIfNoWorkers()
