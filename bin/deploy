@@ -17,30 +17,30 @@ source $DEPLOYER_DIR/bin/_read_config.sh
 
 function run_remote_command {
   if [[ -n "$PROXY_COMMAND" ]]; then
-    ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ProxyCommand="$PROXY_COMMAND" $CONFIG_SERVER $*
+    ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ProxyCommand="$PROXY_COMMAND" $CONFIG_SERVER $*
   else
-    ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $CONFIG_SERVER $*
+    ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $CONFIG_SERVER $*
   fi
 }
 
 function remote_sync {
   if [[ -n "$PROXY_COMMAND" ]]; then
-    rsync -e "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ProxyCommand='$PROXY_COMMAND'" -az --delete $* $CONFIG_SERVER:$TARGET
+    rsync -e "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ProxyCommand='$PROXY_COMMAND'" -az --delete $* $CONFIG_SERVER:$TARGET
   else
-    rsync -e "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" -az --delete $* $CONFIG_SERVER:$TARGET
+    rsync -e "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" -az --delete $* $CONFIG_SERVER:$TARGET
   fi
 }
 
 function deploy_ec2 {
   TARGET=work/$CONFIG_PROJECT
 
-  echo !- Sync sources with server
   rm -f log/* upload_tmp/* cov.html
   if [[ -n "$CONFIG_BROKER_SERVER" ]]; then
     SERVER_HOST=`echo $CONFIG_SERVER | sed s/.*@//`
     PROXY_COMMAND="ssh -q -W %h:%p $CONFIG_BROKER_SERVER"
     ssh -o 'ForwardAgent yes' $CONFIG_BROKER_SERVER ssh-add
   fi
+  echo $(tput setaf 4)!- Sync sources with server$(tput sgr0)
   run_remote_command mkdir -p work
   remote_sync --exclude node_modules --copy-unsafe-links .
   remote_sync $DEPLOYER_DIR/bin/_deploy_on_server.sh
