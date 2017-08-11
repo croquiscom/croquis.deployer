@@ -1,4 +1,5 @@
 #!/bin/bash
+COLOR_RED='\033[0;31m'
 COLOR_BLUE='\033[0;34m'
 COLOR_MAGENTA='\033[0;35m'
 COLOR_RESET='\033[0m'
@@ -62,7 +63,7 @@ EOF
 
 echo -e ${COLOR_BLUE}!- Run server${COLOR_RESET}
 export PROJECT_ROOT=$ROOT/$CURRENT
-./node_modules/@croquiscom/croquis.deployer/bin/start || echo '(((***** FAIL TO START *****)))'
+./node_modules/@croquiscom/croquis.deployer/bin/start || echo -e ${COLOR_RED}'(((***** FAIL TO START *****)))'${COLOR_RESET}
 
 echo -e ${COLOR_BLUE}!- Install Cron jobs${COLOR_RESET}
 ./node_modules/.bin/coffee ./node_modules/@croquiscom/croquis.deployer/bin/install_cron_jobs.coffee
