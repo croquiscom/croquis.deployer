@@ -17,6 +17,7 @@ NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
 echo -e ${COLOR_BLUE}!- Installing project node modules${COLOR_RESET}
+npm prune --production
 npm install --production
 
 echo -e ${COLOR_BLUE}!- Clean copy of repositories to ${COLOR_MAGENTA}$ROOT/$TARGET${COLOR_RESET}
