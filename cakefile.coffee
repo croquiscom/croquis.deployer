@@ -28,7 +28,7 @@ task 'logrotate', 'Rotates the log', ->
 
 task 'run', 'Runs the server', ->
   command = path.resolve require.resolve('coffee-script/register'), '../bin/coffee'
-  args = [__dirname + '/lib/server.coffee', '-w', '-d']
+  args = [__dirname + '/lib/server.js', '-w', '-d']
   child = spawn command, args, stdio: 'inherit'
   process.on 'SIGTERM', ->
     child.kill 'SIGTERM'
