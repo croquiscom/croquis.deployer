@@ -30,18 +30,23 @@ if redirect_log
   openLogFile = ->
     logstream.close() if logstream
     logstream = fs.createWriteStream "#{root}/#{config.project}.log", flags: 'a+', mode: '0644', encoding: 'utf8'
+    return
   root = path.join process.env.HOME, '.croquis'
   try fs.mkdirSync root, '0755'
   openLogFile()
   process.stdout.write = (chunk, encoding, cb) ->
     logstream.write chunk, encoding, cb
+    return
   process.stderr.write = (chunk, encoding, cb) ->
     logstream.write chunk, encoding, cb
+    return
   process.on 'SIGUSR2', ->
     openLogFile()
+    return
 
 log = (msg) ->
   console.log "[#{Date.now()}] [deployer] #{msg}"
+  return
 
 debug = (msg) ->
 #  console.log msg
@@ -50,6 +55,7 @@ exitIfNoWorkers = ->
   if Object.keys(cluster.workers).length is 0
     console.log "[#{Date.now()}] [deployer] Terminate"
     process.exit 0
+  return
 
 registerHandlers = ->
   cluster.on 'exit', (worker, code, signal) ->
@@ -60,6 +66,8 @@ registerHandlers = ->
       options = worker.options
       if options.try < 3
         fork options
+    return
+  return
 
 fork = (options) ->
   log 'forking... ' + options.exec
@@ -74,9 +82,13 @@ fork = (options) ->
   if redirect_log
     worker.process.stdout.on 'data', (data) ->
       logstream.write data
+      return
     worker.process.stderr.on 'data', (data) ->
       logstream.write data
-  worker.once 'listening', -> worker.options.try = 0
+      return
+  worker.once 'listening', ->
+    worker.options.try = 0
+    return
   return worker
 
 startWorkers = ->
@@ -90,10 +102,11 @@ startWorkers = ->
       count = numCPUs
     else
       count = parseInt worker.instances
-    if not count>0
+    if not (count>0)
       count = 1
     for i in [0...count]
       fork exec: app_dir + '/' + worker.app, num: i, graceful_exit: worker.graceful_exit, try: 0
+  return
 
 restartWorkers = ->
   workers = []
@@ -110,6 +123,7 @@ restartWorkers = ->
       worker = workers.pop()
       worker.once 'disconnect', ->
         killOne()
+        return
       worker.options.try = 0
       if worker.options.graceful_exit
         worker.prevent_restart = true
@@ -117,13 +131,17 @@ restartWorkers = ->
         .once 'listening', ->
           debug 'killing... ' + worker.options.exec
           process.kill worker.process.pid, 'SIGTERM'
+          return
         .once 'exit', ->
           # fork에 문제가 생긴 경우 kill 과정을 중단한다
           workers.length = 0
+          return
       else
         debug 'killing... ' + worker.options.exec
         process.kill worker.process.pid, 'SIGTERM'
+    return
   killOne()
+  return
 
 startWatch = ->
   ignoreDirectories = []
@@ -133,25 +151,34 @@ startWatch = ->
   extname = require('path').extname
 
   watch = (file) ->
-    return if extensions.indexOf(extname file) < 0
+    if extensions.indexOf(extname file) < 0
+      return
     #debug 'watching... ' + file.substr(project_root.length+1)
     fs.watchFile file, interval: 100, (curr, prev) ->
       if curr.mtime > prev.mtime
-          log 'changed - ' + file
-          restartWorkers()
+        log 'changed - ' + file
+        restartWorkers()
+      return
+    return
 
   traverse = (file) ->
     fs.stat file, (err, stat) ->
-      return if err
+      if err
+        return
       if stat.isDirectory()
-        return if ignoreDirectories.indexOf(basename file) >= 0
+        if ignoreDirectories.indexOf(basename file) >= 0
+          return
         fs.readdir file, (err, files) ->
           files.map((f) -> "#{file}/#{f}").forEach traverse
+          return
       else
         watch file
+      return
+    return
 
   traverse app_dir
   traverse config_dir
+  return
 
 log "Start at #{fs.realpathSync project_root}"
 registerHandlers()
@@ -162,9 +189,11 @@ if do_watch
 process.on 'SIGHUP', ->
   log "Restart at #{fs.realpathSync project_root}"
   restartWorkers()
+  return
 process.on 'SIGINT', ->
   shutdowning = true
   exitIfNoWorkers()
+  return
 
 # server.coffee가 그냥 종료되면 forever가 다시 띄운다
 # 혹시 worker에 문제가 있어서 실행이 안 되도 server.coffee는 유지되게 한다
