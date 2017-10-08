@@ -23,7 +23,7 @@ if (config.cron_jobs_dir) {
   const cron_jobs_dir = path.resolve(project_root, config.cron_jobs_dir);
   const files = fs.readdirSync(cron_jobs_dir);
   for (const file of files) {
-    if (!/\.coffee/.test(file)) {
+    if (!/(?:\.coffee|\.js|\.ts)/.test(file)) {
       continue;
     }
     const lines = fs.readFileSync(path.resolve(cron_jobs_dir, file), 'utf-8').split('\n');
