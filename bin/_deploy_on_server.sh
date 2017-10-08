@@ -28,13 +28,18 @@ mkdir -p $ROOT/$TARGET
 rsync --exclude=croquis.deployer -az . $ROOT/$TARGET
 
 echo -e ${COLOR_BLUE}!- Remove old versions${COLOR_RESET}
+CURRENT_VERSION=`readlink $CURRENT | awk -F / '{ print $2 }'`
 cd $ROOT/versions
 OLD_DATE=`date --date="14 day ago" +%Y-%m-%d`
 for FILE in *; do
   FILE_DATE=${FILE:0:10}
   if [[ "$FILE_DATE" < "$OLD_DATE" ]]; then
-    echo Removing - $FILE
-    rm -rf $FILE
+    if [[ "$CURRENT_VERSION" = "$FILE" ]]; then
+      echo Skip current - $FILE
+    else
+      echo Removing - $FILE
+      rm -rf $FILE
+    fi
   fi
 done
 
