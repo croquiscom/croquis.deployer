@@ -1,6 +1,6 @@
 {
   "name": "@croquiscom/croquis.deployer",
-  "version": "0.9.5",
+  "version": "0.10.0",
   "bin": {
     "croquis_deploy": "./bin/deploy",
     "croquis_start": "./bin/start",
@@ -9,6 +9,6 @@
   },
   "dependencies": {
     "forever": "^0.15.3",
-    "js-yaml": "^3.9.1"
+    "js-yaml": "^3.10.0"
   }
 }

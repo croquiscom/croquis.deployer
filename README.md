@@ -3,7 +3,7 @@
 # 적용
 
 1. deploy.yaml을 작성한다.
-1. devDependencies에 "@croquiscom/croquis.deployer": "^0.6.0" 추가
+1. devDependencies에 "@croquiscom/croquis.deployer": "0.10.0" 추가
 1. Cakefile에 require '@croquiscom/croquis.deployer/cakefile' 추가
 
 # 사용법
@@ -34,7 +34,7 @@ bin/\_deploy\_on\_server.sh (서버)
 1. bin/start를 실행한다.
 
 bin/start
-1. forever로 lib/server.coffee를 데몬으로 띄운다.
+1. forever로 lib/server.js를 데몬으로 띄운다.
 
 # Elastic Beanstalk 배포
 
@@ -68,11 +68,11 @@ bin/start
 
 # 시그널
 
-server.coffee 프로세스에 시그널을 보내면 다음과 같은 처리를 한다.
+server.js 프로세스에 시그널을 보내면 다음과 같은 처리를 한다.
 
 * SIGHUP
     * 모든 Worker를 재시작한다.
 * SIGUSR2
     * 로그파일을 다시 연다.
 
-server.coffee 프로세스는 자식 Worker를 재시작할 때 기존 자식 프로세스에 SIGTERM을 보낸다.
+server.js 프로세스는 자식 Worker를 재시작할 때 기존 자식 프로세스에 SIGTERM을 보낸다.
