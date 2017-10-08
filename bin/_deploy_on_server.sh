@@ -80,4 +80,4 @@ export PROJECT_ROOT=$ROOT/$CURRENT
 ./node_modules/@croquiscom/croquis.deployer/bin/start || echo -e ${COLOR_RED}'(((***** FAIL TO START *****)))'${COLOR_RESET}
 
 echo -e ${COLOR_BLUE}!- Install Cron jobs${COLOR_RESET}
-./node_modules/.bin/coffee ./node_modules/@croquiscom/croquis.deployer/bin/install_cron_jobs.coffee
+node ./node_modules/@croquiscom/croquis.deployer/bin/install_cron_jobs
