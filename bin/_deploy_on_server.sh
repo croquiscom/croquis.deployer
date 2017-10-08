@@ -64,7 +64,7 @@ echo -e ${COLOR_BLUE}!- Install logrotate${COLOR_RESET}
 cat <<EOF > $CURRENT/logrotate.conf
 $HOME/.croquis/$PROJECT_NAME.log {
     daily
-    size 1G
+    maxsize 1G
     rotate 7
     missingok
     compress
