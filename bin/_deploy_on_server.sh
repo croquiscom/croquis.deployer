@@ -27,22 +27,6 @@ mkdir -p $ROOT/$TARGET
 # (두개가 있으면 forever가 server 프로세스를 다른 스크립트로 인식할 가능성이 있다)
 rsync --exclude=croquis.deployer -az . $ROOT/$TARGET
 
-echo -e ${COLOR_BLUE}!- Remove old versions${COLOR_RESET}
-CURRENT_VERSION=`readlink $CURRENT | awk -F / '{ print $2 }'`
-cd $ROOT/versions
-OLD_DATE=`date --date="14 day ago" +%Y-%m-%d`
-for FILE in *; do
-  FILE_DATE=${FILE:0:10}
-  if [[ "$FILE_DATE" < "$OLD_DATE" ]]; then
-    if [[ "$CURRENT_VERSION" = "$FILE" ]]; then
-      echo Skip current - $FILE
-    else
-      echo Removing - $FILE
-      rm -rf $FILE
-    fi
-  fi
-done
-
 echo -e ${COLOR_BLUE}!- Installing deployer node modules${COLOR_RESET}
 cd $ROOT
 cat <<EOF > package.json
@@ -91,3 +75,19 @@ export PROJECT_ROOT=$ROOT/$CURRENT
 
 echo -e ${COLOR_BLUE}!- Install Cron jobs${COLOR_RESET}
 node ./node_modules/@croquiscom/croquis.deployer/bin/install_cron_jobs
+
+echo -e ${COLOR_BLUE}!- Remove old versions${COLOR_RESET}
+CURRENT_VERSION=`readlink $CURRENT | awk -F / '{ print $2 }'`
+cd $ROOT/versions
+OLD_DATE=`date --date="14 day ago" +%Y-%m-%d`
+for FILE in *; do
+  FILE_DATE=${FILE:0:10}
+  if [[ "$FILE_DATE" < "$OLD_DATE" ]]; then
+    if [[ "$CURRENT_VERSION" = "$FILE" ]]; then
+      echo Skip current - $FILE
+    else
+      echo Removing - $FILE
+      rm -rf $FILE
+    fi
+  fi
+done
