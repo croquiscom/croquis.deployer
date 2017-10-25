@@ -2,10 +2,12 @@
   "name": "@croquiscom/croquis.deployer",
   "version": "0.10.3",
   "bin": {
+    "croquis_run": "./bin/run",
     "croquis_deploy": "./bin/deploy",
     "croquis_start": "./bin/start",
     "croquis_stop": "./bin/stop",
-    "croquis_send_signal": "./bin/send_signal"
+    "croquis_send_signal": "./bin/send_signal",
+    "croquis_logrotate": "./bin/logrotate"
   },
   "dependencies": {
     "forever": "^0.15.3",
