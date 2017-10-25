@@ -1,0 +1,4 @@
+#!/usr/bin/env node
+process.env.NODE_ENV = 'production';
+process.env.FIX_PROJECT_ROOT = 'true';
+require('../lib/manager').check();

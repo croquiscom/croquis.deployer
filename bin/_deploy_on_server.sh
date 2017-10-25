@@ -56,6 +56,14 @@ cat <<EOF > package.json
 EOF
 npm --loglevel=error install
 
+echo -e ${COLOR_BLUE}!- Check server${COLOR_RESET}
+export PROJECT_ROOT=$ROOT/$TARGET
+./node_modules/@croquiscom/croquis.deployer/bin/check
+if [ $? -ne 0 ]; then
+  echo -e ${COLOR_RED}'(((***** FAIL TO START *****)))'${COLOR_RESET}
+  exit 1
+fi
+
 echo -e ${COLOR_BLUE}!- Make live link${COLOR_RESET}
 rm -f $CURRENT
 ln -s $TARGET $CURRENT
@@ -79,7 +87,7 @@ EOF
 
 echo -e ${COLOR_BLUE}!- Run server${COLOR_RESET}
 export PROJECT_ROOT=$ROOT/$CURRENT
-./node_modules/@croquiscom/croquis.deployer/bin/start || echo -e ${COLOR_RED}'(((***** FAIL TO START *****)))'${COLOR_RESET}
+./node_modules/@croquiscom/croquis.deployer/bin/start
 
 echo -e ${COLOR_BLUE}!- Install Cron jobs${COLOR_RESET}
 node ./node_modules/@croquiscom/croquis.deployer/bin/install_cron_jobs
