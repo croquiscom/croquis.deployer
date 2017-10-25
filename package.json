@@ -10,5 +10,8 @@
   "dependencies": {
     "forever": "^0.15.3",
     "js-yaml": "^3.10.0"
+  },
+  "devDependencies": {
+    "coffee-script": "^1.12.7"
   }
 }

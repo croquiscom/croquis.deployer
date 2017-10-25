@@ -2,7 +2,7 @@ server: 192.168.23.127
 project: sample
 
 workers:
-  - app: app.coffee
+  - app: app
     instances: max
     graceful_exit: true
 
