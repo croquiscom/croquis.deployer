@@ -1,4 +1,7 @@
-#!/usr/bin/env node
-process.env.NODE_ENV = 'production';
-process.env.FIX_PROJECT_ROOT = 'true';
-require('../lib/manager').check();
+#!/bin/bash
+export NODE_ENV=production
+export PROJECT_ROOT=${PROJECT_ROOT:-$PWD}
+export FIX_PROJECT_ROOT=true
+export TZ=Etc/UTC
+PARENT_DIR=`cd $(dirname "${BASH_SOURCE[0]}") && cd .. && pwd`
+node $PARENT_DIR/lib/manager check
