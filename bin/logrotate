@@ -2,5 +2,5 @@
 export NODE_ENV=production
 export PROJECT_ROOT=${PROJECT_ROOT:-$PWD}
 export TZ=Etc/UTC
-PARENT_DIR=`cd $(dirname $(readlink -f "${BASH_SOURCE[0]}")) && cd .. && pwd`
+PARENT_DIR=`node -e "process.stdout.write(path.resolve(fs.realpathSync('${BASH_SOURCE[0]}'), '..', '..'))"`
 node $PARENT_DIR/lib/manager sendSignal SIGUSR2
