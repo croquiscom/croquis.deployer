@@ -64,7 +64,7 @@ $HOME/.croquis/$PROJECT_NAME.log {
     notifempty
     sharedscripts
     postrotate
-        $HOME/.nvm/nvm-exec cake logrotate
+        $HOME/.nvm/nvm-exec $ROOT/node_modules/.bin/croquis_logrotate
     endscript
 }
 EOF
