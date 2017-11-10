@@ -28,7 +28,7 @@ if (config.cron_jobs_dir) {
     }
     const lines = fs.readFileSync(path.resolve(cron_jobs_dir, file), 'utf-8').split('\n');
     for (const line of lines) {
-      if (/^#\s*cron: (.*)$/.test(line)) {
+      if (/^(?:#|\/\/)\s*cron: (.*)$/.test(line)) {
         crontab.push(`${RegExp.$1} ${project_root}/run_job.sh ${file.substr(0, file.length - 7)}`);
       }
     }
