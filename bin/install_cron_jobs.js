@@ -26,9 +26,11 @@ if (config.cron_jobs_dir) {
     if (!/(?:\.coffee|\.js|\.ts)/.test(file)) {
       continue;
     }
+    const is_coffeescript = /\.coffee/.test(file);
     const lines = fs.readFileSync(path.resolve(cron_jobs_dir, file), 'utf-8').split('\n');
     for (const line of lines) {
-      if (/^(?:#|\/\/)\s*cron: (.*)$/.test(line)) {
+      const pattern = is_coffeescript ? /^#\s*cron: (.*)$/ : /^\/\/\s*cron: (.*)$/;
+      if (pattern.test(line)) {
         crontab.push(`${RegExp.$1} ${project_root}/run_job.sh ${file.substr(0, file.length - 7)}`);
       }
     }
