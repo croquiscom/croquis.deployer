@@ -1,6 +1,6 @@
 {
   "name": "@croquiscom/croquis.deployer",
-  "version": "0.10.8",
+  "version": "0.10.9",
   "bin": {
     "croquis_run": "./bin/run",
     "croquis_deploy": "./bin/deploy",
