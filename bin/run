@@ -1,5 +1,15 @@
 #!/bin/bash
+trap : SIGTERM # ignore signal, instead stop wait
+
 export PROJECT_ROOT=${PROJECT_ROOT:-$PWD}
 export TZ=Etc/UTC
 PARENT_DIR=`node -e "process.stdout.write(path.resolve(fs.realpathSync('${BASH_SOURCE[0]}'), '..', '..'))"`
-node $PARENT_DIR/lib/server -w -d
+
+node $PARENT_DIR/lib/server -w -d &
+SERVER_PID=$!
+wait $SERVER_PID
+
+if [[ $? -gt 128 ]]; then
+  # kill sub process when killed by signal
+  kill $SERVER_PID
+fi
