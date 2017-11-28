@@ -32,7 +32,7 @@ cd $ROOT
 cat <<EOF > package.json
 {
   "dependencies": {
-    "@croquiscom/croquis.deployer": "0.10.9",
+    "@croquiscom/croquis.deployer": "0.10.10",
     "forever": "^0.15.3",
     "js-yaml": "^3.10.0"
   }
