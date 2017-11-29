@@ -22,8 +22,13 @@ if (Array.isArray(config.cron_jobs)) {
 if (config.cron_jobs_dir) {
   const cron_jobs_dir = path.resolve(project_root, config.cron_jobs_dir);
   const files = fs.readdirSync(cron_jobs_dir);
+  const installed = {};
   for (const file of files) {
     if (!/(?:\.coffee|\.js|\.ts)/.test(file)) {
+      continue;
+    }
+    const filename = path.basename(file, path.extname(file));
+    if (installed[filename]) {
       continue;
     }
     const is_coffeescript = /\.coffee/.test(file);
@@ -31,7 +36,7 @@ if (config.cron_jobs_dir) {
     for (const line of lines) {
       const pattern = is_coffeescript ? /^#\s*cron: (.*)$/ : /^\/\/\s*cron: (.*)$/;
       if (pattern.test(line)) {
-        const filename = path.basename(file, path.extname(file));
+        installed[filename] = 1;
         crontab.push(`${RegExp.$1} ${project_root}/run_job.sh ${filename}`);
       }
     }
