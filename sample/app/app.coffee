@@ -17,13 +17,13 @@ server = http.createServer app
 
 port = process.env.PORT or 3000
 server.listen port, ->
-  console.log "[#{Date.now()}] [server#{worker_num}] Started"
+  console.log "[#{new Date().toISOString()}] [server#{worker_num}] Started"
 
 _shutdowning = false
 shutdown = ->
   if _shutdowning
     return
-  console.log "[#{Date.now()}] [server#{worker_num}] Shutdown"
+  console.log "[#{new Date().toISOString()}] [server#{worker_num}] Shutdown"
   _shutdowning = true
 
   # 5초간 끝나지 않으면 강제 종료
@@ -32,7 +32,7 @@ shutdown = ->
   , 5000
 
   server.close ->
-    console.log "[#{Date.now()}] [server#{worker_num}] Terminate"
+    console.log "[#{new Date().toISOString()}] [server#{worker_num}] Terminate"
     process.exit 0
 
 process.on 'SIGHUP', shutdown

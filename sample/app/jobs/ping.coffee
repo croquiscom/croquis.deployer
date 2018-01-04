@@ -1,3 +1,3 @@
 process.env.NODE_CONFIG_DIR = __dirname + '/../../config'
 
-console.log "[#{Date.now()}] [server(cron)] Ping"
+console.log "[#{new Date().toISOString()}] [server(cron)] Ping"
