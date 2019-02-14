@@ -1,4 +1,4 @@
-server: 192.168.23.127
+server: deploy_sample
 project: sample
 
 workers:
