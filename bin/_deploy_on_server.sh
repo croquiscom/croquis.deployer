@@ -27,9 +27,7 @@ npm install --production
 
 echo -e ${COLOR_BLUE}!- Clean copy of repositories to ${COLOR_MAGENTA}$ROOT/$TARGET${COLOR_RESET}
 mkdir -p $ROOT/$TARGET
-# croquis.deployer는 deployer 모듈로 설치되므로 app 모듈에서는 제외한다.
-# (두개가 있으면 forever가 server 프로세스를 다른 스크립트로 인식할 가능성이 있다)
-rsync --exclude=croquis.deployer -az . $ROOT/$TARGET
+rsync -az . $ROOT/$TARGET
 
 echo -e ${COLOR_BLUE}!- Installing deployer node modules${COLOR_RESET}
 cd $ROOT
@@ -37,8 +35,7 @@ cat <<EOF > package.json
 {
   "dependencies": {
     "@croquiscom/croquis.deployer": "0.10.12",
-    "forever": "^0.15.3",
-    "js-yaml": "^3.10.0",
+    "js-yaml": "^3.12.1",
     "pm2": "^3.2.9"
   }
 }
