@@ -12,12 +12,16 @@ TARGET=versions/$DATE,$REF
 CURRENT=current
 
 SELF="${BASH_SOURCE[0]}"
-cd `dirname "$SELF"`
 
 NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
+echo -e ${COLOR_BLUE}!- Installing pm2${COLOR_RESET}
+npm explore -g pm2 || npm install -g pm2
+(cd ~ ; pm2 ping)
+
 echo -e ${COLOR_BLUE}!- Installing project node modules${COLOR_RESET}
+cd `dirname "$SELF"`
 npm prune --production
 npm install --production
 
@@ -34,7 +38,8 @@ cat <<EOF > package.json
   "dependencies": {
     "@croquiscom/croquis.deployer": "0.10.12",
     "forever": "^0.15.3",
-    "js-yaml": "^3.10.0"
+    "js-yaml": "^3.10.0",
+    "pm2": "^3.2.9"
   }
 }
 EOF
