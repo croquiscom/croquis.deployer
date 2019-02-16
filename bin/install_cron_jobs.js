@@ -48,7 +48,7 @@ if (config.workers) {
   crontab.push(`@reboot ${project_root}/on_boot.sh`);
 
   // add logrotate job
-  crontab.push(`0 * * * * cd ${project_root} && /usr/sbin/logrotate -s ${process.env.HOME}/.croquis/logrotate_${config.project}.status logrotate.conf`);
+  crontab.push(`0 * * * * cd ${process.env.HOME}/running && /usr/sbin/logrotate -s ${process.env.HOME}/.croquis/logrotate.status logrotate.conf`);
 }
 
 // install crontab
@@ -56,8 +56,8 @@ crontab = 'CONTENT_TYPE="text/plain; charset=utf-8"\n' + crontab.join('\n') + '\
 
 fs.writeFileSync(`${project_root}/.crontab`, crontab);
 try {
-  child_process.execSync(`crontab -l | grep -v ${project_root} | grep -v CONTENT_TYPE >> ${project_root}/.crontab`);
-} catch (error) {}
+  child_process.execSync(`crontab -l | grep -v ${project_root} | grep -v logrotate | grep -v CONTENT_TYPE >> ${project_root}/.crontab`);
+} catch (error) { }
 try {
   child_process.execSync(`crontab ${project_root}/.crontab`);
-} catch (error) {}
+} catch (error) { }

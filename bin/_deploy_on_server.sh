@@ -55,8 +55,8 @@ rm -f $CURRENT
 ln -s $TARGET $CURRENT
 
 echo -e ${COLOR_BLUE}!- Install logrotate${COLOR_RESET}
-cat <<EOF > $CURRENT/logrotate.conf
-$HOME/.croquis/$PROJECT_NAME.log {
+cat <<EOF > $HOME/running/logrotate.conf
+$HOME/.croquis/*.log {
     daily
     maxsize 1G
     rotate 7
@@ -66,7 +66,7 @@ $HOME/.croquis/$PROJECT_NAME.log {
     notifempty
     sharedscripts
     postrotate
-        $HOME/.nvm/nvm-exec $ROOT/node_modules/.bin/croquis_logrotate
+        pm2 reloadLogs
     endscript
 }
 EOF
