@@ -1,5 +1,5 @@
-server: deploy_sample
-project: sample
+server: deployer-sample
+project: deployer-sample
 
 workers:
   - app: app

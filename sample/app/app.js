@@ -28,7 +28,6 @@ server.listen(process.env.PORT || 3000, () => {
 
 let shutdowning = false;
 function shutdown() {
-  const worker_num = process.env.WORKER_NUM || process.env.PM2_INSTANCE_ID || 0;
   if (shutdowning) {
     return;
   }

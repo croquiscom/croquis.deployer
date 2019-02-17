@@ -14,7 +14,7 @@
 2. Setup SSH config
     ```
     $ cat ~/.ssh/config
-    Host deploy_sample
+    Host deployer-sample
         HostName localhost
         Port 32770
         User root
