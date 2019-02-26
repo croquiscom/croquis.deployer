@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "run": "cake run",
     "predeploy": "coffee -c app config",
     "deploy": "croquis_deploy",
     "postdeploy": "git clean -f app config > /dev/null"
