@@ -1,6 +1,6 @@
 {
   "name": "@croquiscom/croquis.deployer",
-  "version": "0.10.12",
+  "version": "0.10.13",
   "bin": {
     "croquis_deploy": "./bin/deploy",
     "croquis_start": "./bin/start",
